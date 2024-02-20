@@ -6,6 +6,9 @@ import NewRecipe from './pages/NewRecipe';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
 import { PaperProvider, DefaultTheme, BottomNavigation, Text } from 'react-native-paper';
+import { QueryClient, QueryClientProvider } from 'react-query'
+
+const queryClient = new QueryClient()
 
 const theme = {
   ...DefaultTheme,
@@ -35,13 +38,15 @@ export default function App() {
   })
 
   return (
-    <PaperProvider>
+    <QueryClientProvider client={queryClient}>
+      <PaperProvider>
         <StatusBar />
         <BottomNavigation
           navigationState={{ index, routes }}
           onIndexChange={setIndex}
           renderScene={renderScene}
         />
-    </PaperProvider>
+      </PaperProvider>
+    </QueryClientProvider>
   );
 }
