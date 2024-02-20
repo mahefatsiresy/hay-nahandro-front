@@ -1,20 +1,28 @@
-import { Button, Card, Text } from 'react-native-paper';
+import { Button, Card, Text } from "react-native-paper";
 
-export default function RecipeCard() {
+export default function RecipeCard({
+  name = "Nom de l'ingredient",
+  description = "Description",
+  source = "",
+  onPress,
+}) {
   return (
-    <Card
-      mode='elevated'
-      style={{ marginBottom: 24 }}>
-      <Card.Cover source={require('../assets/icon.png')} />
-      <Card.Title title="Nom de l'ingredient" titleVariant='headlineSmall'/>
+    <Card onPress={onPress} mode="elevated" style={{ marginBottom: 24 }}>
+      {!source ? (
+        <Card.Cover source={require("../assets/icon.png")} />
+      ) : (
+        <Card.Cover source={{ uri: source }} />
+      )}
+
+      <Card.Title title={name} titleVariant="headlineSmall" />
       <Card.Content>
-        <Text variant='bodyLarge'>Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem </Text>
+        <Text variant="bodyLarge">{description}</Text>
       </Card.Content>
       <Card.Actions>
-        <Button icon="share">Partager</Button>
-        <Button icon="comment">Commenter</Button>
         <Button icon="heart">Liker</Button>
+        <Button icon="comment">Commenter</Button>
+        <Button icon="share">Partager</Button>
       </Card.Actions>
-    </Card >
+    </Card>
   );
 }
