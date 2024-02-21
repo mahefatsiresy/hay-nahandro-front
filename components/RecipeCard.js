@@ -1,17 +1,16 @@
 import { Button, Card, Text } from "react-native-paper";
 
 export default function RecipeCard({
-  name = "Nom de l'ingredient",
-  description = "Description",
-  source = "",
+  recipe,
   onPress,
 }) {
+  const {name, description, cover_image} = recipe
   return (
     <Card onPress={onPress} mode="elevated" style={{ marginBottom: 24 }}>
-      {!source ? (
+      {!cover_image ? (
         <Card.Cover source={require("../assets/icon.png")} />
       ) : (
-        <Card.Cover source={{ uri: source }} />
+        <Card.Cover source={{ uri: cover_image }} />
       )}
 
       <Card.Title title={name} titleVariant="headlineSmall" />

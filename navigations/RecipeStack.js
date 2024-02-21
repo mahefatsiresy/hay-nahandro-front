@@ -12,6 +12,7 @@ const Stack = createNativeStackNavigator();
  */
 export default function RecipeStack() {
   return (
+    // Navigator: ensemble de Screen
     <Stack.Navigator>
       <Stack.Screen
         name="List"

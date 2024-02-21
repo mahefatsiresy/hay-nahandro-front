@@ -16,7 +16,6 @@ export const navigationRef = createNavigationContainerRef();
 // that don't have access to the `navigation` prop
 function navigate(name, params) {
   if (navigationRef.isReady()) {
-    console.log("eto")
     navigationRef.navigate(name, params)
   }
 }

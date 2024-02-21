@@ -22,6 +22,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <PaperProvider>
+        {/* NavigationContainer provides routing */}
         <NavigationContainer ref={navigationRef}>
           <RootNavigation />
         </NavigationContainer>
