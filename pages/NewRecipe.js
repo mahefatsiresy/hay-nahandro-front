@@ -8,6 +8,9 @@ import {
 } from "react-native";
 import { TextInput, Text, Button, Icon } from "react-native-paper";
 import * as DocumentPicker from "expo-document-picker";
+import { useMutation } from "react-query";
+import { postRecipe } from "../apis/recipe.api";
+import { queryClient } from "../App";
 
 export default function NewRecipe({ navigation }) {
   const [recipe, setRecipe] = React.useState({
@@ -19,28 +22,23 @@ export default function NewRecipe({ navigation }) {
   });
   const [file, setFile] = React.useState(null);
 
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(recipe),
-  };
+  // mutate query with queryKey `recipe` after sucess post
+  const mutation = useMutation({
+    mutationFn: async () => {
+      // upload the image then update the recipe
+      const filePath = await uploadImage(file);
+      setRecipe({
+        ...recipe,
+        cover_image: filePath,
+      });
 
-  const postRecipe = async () => {
-    // upload the image then post the recipe data
-    await uploadImage();
-    try {
-      await fetch("http://192.168.88.17:8000/recipes/", requestOptions).then(
-        (response) => {
-          response.json().then(() => {
-            // then go to Recipe List
-            navigation.navigate("Recipe", { screen: "List" });
-          });
-        },
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
+      await postRecipe(recipe);
+      navigation.navigate("Recipe", { screen: "List" });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["recipes"] });
+    },
+  });
 
   // pick the image from the device
   async function pickImage() {
@@ -62,27 +60,6 @@ export default function NewRecipe({ navigation }) {
       setRecipe({ ...recipe, cover_image: result.assets[0].uri });
     } catch (error) {
       console.error(error);
-    }
-  }
-
-  // upload the image to the server
-  async function uploadImage() {
-    const url = "http://192.168.88.17:8000/upload-file/";
-    const formData = new FormData();
-    formData.append("file", file);
-    const options = {
-      method: "POST",
-      body: formData,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-      },
-    };
-    try {
-      const filePath = await fetch(url, options);
-      setRecipe({ ...recipe, cover_image: "http://192.168.88.17" + filePath });
-    } catch (e) {
-      console.error(e);
     }
   }
 
@@ -160,7 +137,7 @@ export default function NewRecipe({ navigation }) {
           numberOfLines={5}
         />
       </ScrollView>
-      <Button onPress={postRecipe} mode="contained">
+      <Button onPress={mutation.mutateAsync} mode="contained">
         Publier
       </Button>
     </SafeAreaView>

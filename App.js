@@ -5,7 +5,7 @@ import RootNavigation, {navigationRef} from "./components/RootNavigation";
 import RecipeStack from "./navigations/RecipeStack";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 const theme = {
   ...DefaultTheme,

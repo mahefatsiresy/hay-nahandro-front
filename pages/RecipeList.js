@@ -3,17 +3,20 @@ import RecipeCard from "../components/RecipeCard";
 import { useQuery } from "react-query";
 import FullScreenLoading from "../components/FullScreenLoading";
 import ErrorMessage from "../components/ErrorMessage";
+import { getRecipes } from "../apis/recipe.api";
 
 export default function RecipeList({ navigation }) {
-  const { isLoading, error, data } = useQuery("repoData", () =>
-    // samy manan ny azy rehefa midev
-    fetch("http://192.168.88.17:8000/recipes").then((res) => res.json()),
-  );
+  const { isLoading, error, data } = useQuery({
+    queryKey: "recipes",
+    queryFn: getRecipes,
+  });
 
   if (isLoading) return <FullScreenLoading />;
 
   if (error) return <ErrorMessage />;
 
+  // Go to detail page when a RecipeCard is clicked and pass the recipe
+  // as params
   function handleNavigation(recipe) {
     navigation.navigate("Recipe", { screen: "Detail", params: { recipe } });
   }
